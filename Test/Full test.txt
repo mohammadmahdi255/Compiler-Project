@@ -1,0 +1,60 @@
+program pascalTest;
+
+var
+   i1, i2, i3, retProc : integer;
+   index : integer;
+   r1, r2, r3, retFunc : real;
+
+procedure findMax(a, b, c: integer; var res: integer);
+begin
+  if a > b then
+      res := a
+  else
+      res := b;
+  if c >= res then
+      res := c;
+end;
+
+function calc(x, y, z: real): real;
+var
+   numSum, numSub, numMul, numDiv1: real;
+
+   temp1, temp2, numDiv2, numMod: integer;
+
+
+begin
+   numSum := x + y;
+   numSub := x - y;
+   numMul := x * y;
+   numDiv1 := x / y;
+
+   temp1 := 4;
+   temp2 := 2;
+   numDiv2 := temp1 div temp2;
+   numMod := temp1 mod temp2;
+
+
+calc := numSum + numSub + numMul + numDiv1 + numDiv2 + numMod;
+end;
+
+begin
+   i1 := 1;
+   i2 := 2;
+   i3 := 3;
+
+   r1 := 1.0;
+   r2 := 0.5;
+   r3 := 1.5;
+
+   index := 1;
+
+   while  index <= 2  do
+   begin
+      findMax(i1, i2, i3, retProc);
+      retFunc := calc(r1,r2,r3);
+      index := index +-+- 1;
+   end;
+
+end.
+
+00.2

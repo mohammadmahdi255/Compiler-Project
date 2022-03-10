@@ -1,0 +1,15 @@
+program pascalTest;
+
+var
+   i : integer;
+   r : real;
+
+procedure findMax(a, b, c: integer; var res: integer);
+begin
+   if a > b then
+      res := a
+   else
+      res := b;
+   if c > res then
+      res := c;
+end;
