@@ -11,13 +11,13 @@ class Lexer:
     }
 
     tokens = [
-        "PROGRAM_KW", "VAR_KW", "EMPTY", "INTEGER_KW",
-        "REAL_KW", "PROCEDURE_KW", "BEGIN_KW", "END_KW",
-        "IDENTIFIER", "INTEGER_CONSTANT","REAL_CONSTANT",
-        "SUM_KW", "SUB_KW", "MUL_KW","DIV_KW", "MOD_KW",
-        "LT_KW", "LE_KW", "EQ_KW", "NE_KW", "GT_KW", "GE_KW",
-        "AND_KW", "OR_KW", "NOT_KW", "LRB_KW", "RRB_KW", "SEMICOLON",
-    ] + list(reserved.keys())
+                 "PROGRAM_KW", "VAR_KW", "EMPTY", "INTEGER_KW",
+                 "REAL_KW", "PROCEDURE_KW", "BEGIN_KW", "END_KW",
+                 "IDENTIFIER", "INTEGER_CONSTANT", "REAL_CONSTANT",
+                 "SUM_KW", "SUB_KW", "MUL_KW", "DIV_KW", "MOD_KW",
+                 "LT_KW", "LE_KW", "EQ_KW", "NE_KW", "GT_KW", "GE_KW",
+                 "AND_KW", "OR_KW", "NOT_KW", "LRB_KW", "RRB_KW", "SEMICOLON",
+             ] + list(reserved.keys())
 
     # COLONS
     t_SEMICOLON = r'\;'
@@ -48,7 +48,7 @@ class Lexer:
     t_DO_KW = r'\do'
 
     def t_INTEGER_CONSTANT(self):
-        r'[-|+]?(\d+)'
+        r"""(?(?=([\d]\s*)(-|\+|\s*[\*|\/])\s*[0]*\K([-|\+|\s]*)(\d)+).*|[-|+]\s*[0]*[\d]+)"""
         return self
 
     # Error handling rule
