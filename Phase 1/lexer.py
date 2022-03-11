@@ -73,16 +73,22 @@ class Lexer:
             t.value = '-'
         return t
 
+    def t_REAL_CONSTANT(self, t):
+        r"""[\d]+\.[\d]*"""
+        t.value = str(t.value).strip('0')
+        if t.value[-1] == '.':
+            t.value += '0'
+        if t.value[0] == '.':
+            t.value = '0' + t.value
+        return self.__update_token(t)
+
     # INTEGER REGULAR EXPRESSION
     def t_INTEGER_CONSTANT(self, t):
         r"""[\d]+"""
         t.value = str(t.value).lstrip('0')
-        if len(self.token_list) > 0 and self.token_list[-1].type in ['SUM', 'SUB']:
-            if len(self.token_list) < 1 or (len(self.token_list) > 1 and self.token_list[-2].type != 'INTEGER_CONSTANT'):
-                if self.token_list[-1].type == 'SUB':
-                    t.value = "-" + t.value
-                self.token_list.pop()
-        return t
+        if t.value == '':
+            t.value = '0'
+        return self.__update_token(t)
 
     # Define a rule so we can track line numbers
     @staticmethod
@@ -122,3 +128,17 @@ class Lexer:
             return True, token
 
         return True, token
+
+    def __update_token(self, t):
+        try:
+            token = self.token_list.pop()
+            if token in ['SUM', 'SUB'] and (
+                    len(self.token_list) == 0 or self.token_list[-1].type != 'INTEGER_CONSTANT'):
+                if self.token_list[-1].type == 'SUB':
+                    t.value = "-" + t.value
+            else:
+                self.token_list.append(token)
+        except IndexError:
+            pass
+        finally:
+            return t
