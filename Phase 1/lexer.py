@@ -32,7 +32,7 @@ class Lexer:
                  "INTEGER_CONSTANT", "REAL_CONSTANT", "IDENTIFIER",
                  "SUM", "SUB", "MUL", "DIV", "ASSIGN", "LT", "LE",
                  "EQ", "NE", "GT", "GE", "LRB", "RRB", "SEMICOLON",
-                 "COLON", "COMMA", "DOT", "COMMENT",
+                 "COLON", "COMMA", "DOT", "COMMENT", "ERROR"
              ] + list(reserved.values())
 
     # OPERATORS
@@ -56,7 +56,7 @@ class Lexer:
     t_SEMICOLON = r';'
     t_COLON = r':'
     t_COMMA = r','
-    t_DOT = r'.'
+    t_DOT = r'\.'
 
     # RESERVE KW
     t_IF_KW = r'if'
