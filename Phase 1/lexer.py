@@ -15,10 +15,10 @@ class Lexer:
         r'integer': 'INTEGER_KW',
         r'real': 'REAL_KW',
 
-        r'mod': 'MOD_KW',
-        r'procedure': 'PROCEDURE_KW',
-        r'var': 'VAR_KW',
         r'div': 'DIV_KW',
+        r'mod': 'MOD_KW',
+        r'var': 'VAR_KW',
+        r'procedure': 'PROCEDURE_KW',
         r'function': 'FUNCTION_KW',
 
         r'and': 'AND_KW',
@@ -30,10 +30,27 @@ class Lexer:
 
     tokens = [
                  "INTEGER_CONSTANT", "REAL_CONSTANT", "IDENTIFIER",
-                 "SUM", "SUB", "MUL", "DIV", "POINT", "SIGN", "LT", "LE",
-                 "EQ", "NE", "GT", "GE", "LRB", "RRB",
-                 "ASSIGN", "SEMICOLON", "COLON", "COMMA", "DOT"
+                 "SUM", "SUB", "MUL", "DIV", "ASSIGN", "LT", "LE",
+                 "EQ", "NE", "GT", "GE", "LRB", "RRB", "SEMICOLON",
+                 "COLON", "COMMA", "DOT", "COMMENT",
              ] + list(reserved.values())
+
+    # OPERATORS
+    t_SUM = r'\+'
+    t_SUB = r'\-'
+    t_MUL = r'\*'
+    t_DIV = r'/'
+    t_ASSIGN = r':='
+    t_LT = r'<'
+    t_LE = r'<='
+    t_EQ = r'='
+    t_NE = r'<>'
+    t_GT = r'>'
+    t_GE = r'>='
+
+    # BRACKETS
+    t_LRB = r'\('
+    t_RRB = r'\)'
 
     # COLONS
     t_SEMICOLON = r';'
@@ -41,64 +58,75 @@ class Lexer:
     t_COMMA = r','
     t_DOT = r'.'
 
-    # OPERATORS
-    t_MUL = r'\*'
-    t_DIV = r'/'
-    t_SUM = r'\+'
-    t_SUB = r'\-'
-    t_ASSIGN = r':='
-    t_EQ = r'='
-    t_GT = r'>'
-    t_GE = r'>='
-    t_LT = r'<'
-    t_LE = r'<='
-    t_NE = r'<>'
-
-    # BRACKETS
-    t_LRB = r'\('
-    t_RRB = r'\)'
-
     # RESERVE KW
     t_IF_KW = r'if'
     t_THEN_KW = r'then'
     t_ELSE_KW = r'else'
+
     t_WHILE_KW = r'while'
     t_DO_KW = r'do'
 
+    t_INTEGER_KW = r'integer'
+    t_REAL_KW = r'real'
+
+    t_MOD_KW = r'mod'
+    t_DIV_KW = r'div'
+    t_VAR_KW = r'var'
+    t_PROCEDURE_KW = r'procedure'
+    t_FUNCTION_KW = r'function'
+
+    t_AND_KW = r'and'
+    t_OR_KW = r'or'
+    t_NOT_KW = r'not'
+    t_BEGIN_KW = r'begin'
+    t_END_KW = r'end'
+
     # A string containing ignored characters (spaces and tabs)
-    t_ignore = '\n \t'
+    t_ignore = ' \t'
 
     @staticmethod
     def t_ERROR(t):
-        r"""[0-9]+[a-z_A-Z][a-zA-Z_0-9]*"""
+        r"""\d+[_|a-z|A-Z]\w*"""
         return t
 
     @staticmethod
     def t_newline(t):
         r"""\n+"""
         t.lexer.lineno += len(t.value)
+        pass
+
+    # @staticmethod
+    # def t_COMMENT_MULTI_LINE(t):
+    #     r"""\/{2}.*"""
+    #     pass
+
+    @staticmethod
+    def t_COMMENT(t):
+        r"""\/{2}.*"""
+        pass
 
     @staticmethod
     def t_REAL_CONSTANT(t):
-        r"""[0-9]*\.[0-9]+"""
+        r"""\d+\.\d*"""
         t.value = float(t.value)
         return t
 
     @staticmethod
     def t_INTEGER_CONSTANT(t):
-        r"""(\d+)"""
+        r"""\d+"""
         t.value = int(t.value)
         return t
 
     def t_IDENTIFIER(self, t):
-        r"""[_a-zA-Z][_a-zA-Z0-9]*"""
-        if t.value in self.reserved:
-            t.type = self.reserved[t.value]
+        r"""[_|a-z|A-Z]\w*"""
+        t.type = self.reserved.get(t.value, 'IDENTIFIER')
         return t
 
     # Error handling rule
-    def t_error(self, t):
-        raise Exception('Error at', t.value)
+    @staticmethod
+    def t_error(t):
+        print("Illegal character '%s'" % t.value[0])
+        t.lexer.skip(1)
 
     def __init__(self, **kwargs):
         self.lexer = self.__build(**kwargs)
@@ -108,9 +136,11 @@ class Lexer:
     def __build(self, **kwargs):
         return lex(module=self, **kwargs)
 
+    # Input text for lexer
     def input(self, text):
         self.lexer.input(text)
 
+    # Returns all tokens
     def get_tokens(self):
         token = ''
         while token is not None:
