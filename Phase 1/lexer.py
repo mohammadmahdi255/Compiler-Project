@@ -32,7 +32,7 @@ class Lexer:
                  "INTEGER_CONSTANT", "REAL_CONSTANT", "IDENTIFIER",
                  "SUM", "SUB", "MUL", "DIV", "ASSIGN", "LT", "LE",
                  "EQ", "NE", "GT", "GE", "LRB", "RRB", "SEMICOLON",
-                 "COLON", "COMMA", "DOT", "COMMENT", "ERROR"
+                 "COLON", "COMMA", "DOT", "ERROR"
              ] + list(reserved.values())
 
     # OPERATORS
@@ -58,28 +58,6 @@ class Lexer:
     t_COMMA = r','
     t_DOT = r'\.'
 
-    # RESERVE KW
-    t_IF_KW = r'if'
-    t_THEN_KW = r'then'
-    t_ELSE_KW = r'else'
-
-    t_WHILE_KW = r'while'
-    t_DO_KW = r'do'
-
-    t_INTEGER_KW = r'integer'
-    t_REAL_KW = r'real'
-
-    t_MOD_KW = r'mod'
-    t_DIV_KW = r'div'
-    t_VAR_KW = r'var'
-    t_PROCEDURE_KW = r'procedure'
-    t_FUNCTION_KW = r'function'
-
-    t_AND_KW = r'and'
-    t_OR_KW = r'or'
-    t_NOT_KW = r'not'
-    t_BEGIN_KW = r'begin'
-    t_END_KW = r'end'
 
     # A string containing ignored characters (spaces and tabs)
     t_ignore = ' \t'
@@ -95,15 +73,6 @@ class Lexer:
         t.lexer.lineno += len(t.value)
         pass
 
-    # @staticmethod
-    # def t_COMMENT_MULTI_LINE(t):
-    #     r"""\/{2}.*"""
-    #     pass
-
-    @staticmethod
-    def t_COMMENT(t):
-        r"""\/{2}.*"""
-        pass
 
     @staticmethod
     def t_REAL_CONSTANT(t):
@@ -125,8 +94,7 @@ class Lexer:
     # Error handling rule
     @staticmethod
     def t_error(t):
-        print("Illegal character '%s'" % t.value[0])
-        t.lexer.skip(1)
+        raise Exception("Illegal character '%s'" % t.value[0])
 
     def __init__(self, **kwargs):
         self.lexer = self.__build(**kwargs)
