@@ -1,7 +1,7 @@
 from Parser import *
 
 file_name = "Final test"
-lexer = Lexer()
+lexer = Lexer().build()
 file = open('../Test/{file_name}.txt'.format(file_name=file_name), "r")
 text_input = file.read()
 file.close()

@@ -1,4 +1,4 @@
-from ply.lex import lex
+from ply import lex
 
 
 class Lexer:
@@ -96,22 +96,11 @@ class Lexer:
     def t_error(t):
         raise Exception("Illegal character '%s'" % t.value[0])
 
-    def __init__(self, **kwargs):
-        self.lexer = self.__build(**kwargs)
-        self.token_list = []
+    def __init__(self):
+        self.lexer = None
 
     # Build the lexer
-    def __build(self, **kwargs):
-        return lex(module=self, **kwargs)
+    def build(self, **kwargs):
+        self.lexer = lex.lex(module=self, **kwargs)
+        return self.lexer
 
-    # Input text for lexer
-    def input(self, text):
-        self.lexer.input(text)
-
-    # Returns all tokens
-    def get_tokens(self):
-        token = ''
-        while token is not None:
-            token = self.lexer.token()
-            self.token_list.append(token)
-        return self.token_list[:-1]

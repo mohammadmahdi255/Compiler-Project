@@ -1,4 +1,4 @@
-program pascalTest;
+program pascalTest
 
 var
    i1, i2, i3, retProc : integer;
