@@ -2,4 +2,5 @@
 
 *.pdf
 */venv/
+*/__pycache__/
 *.xml

@@ -1,5 +1,6 @@
 from ply import lex
 
+
 class Lexer:
     reserved = {
         r'program': 'PROGRAM_KW',
@@ -57,7 +58,6 @@ class Lexer:
     t_COMMA = r','
     t_DOT = r'\.'
 
-
     # A string containing ignored characters (spaces and tabs)
     t_ignore = ' \t'
 
@@ -71,7 +71,6 @@ class Lexer:
         r"""\n+"""
         t.lexer.lineno += len(t.value)
         pass
-
 
     @staticmethod
     def t_REAL_CONSTANT(t):
@@ -95,6 +94,10 @@ class Lexer:
     def t_error(t):
         raise Exception("Illegal character '%s'" % t.value[0])
 
+    def __init__(self):
+        self.lexer = None
+
+    # Build the lexer
     def build(self, **kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
         return self.lexer
