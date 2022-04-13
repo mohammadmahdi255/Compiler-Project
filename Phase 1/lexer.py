@@ -1,94 +1,100 @@
 from ply import lex
 
-
 class Lexer:
+    reserved = {
+        r'program': 'PROGRAM_KW',
+
+        r'if': 'IF_KW',
+        r'then': 'THEN_KW',
+        r'else': 'ELSE_KW',
+
+        r'while': 'WHILE_KW',
+        r'do': 'DO_KW',
+
+        r'integer': 'INTEGER_KW',
+        r'real': 'REAL_KW',
+
+        r'div': 'DIV_KW',
+        r'mod': 'MOD_KW',
+        r'var': 'VAR_KW',
+        r'procedure': 'PROCEDURE_KW',
+        r'function': 'FUNCTION_KW',
+
+        r'and': 'AND_KW',
+        r'or': 'OR_KW',
+        r'not': 'NOT_KW',
+        r'begin': 'BEGIN_KW',
+        r'end': 'END_KW'
+    }
 
     tokens = [
-        "PROGRAM_KW", "VAR_KW", "INTEGER_KW",
-        "REAL_KW", "PROCEDURE_KW", "BEGIN_KW", "END_KW",
-        "IF_KW", "THEN_KW", "ELSE_KW", "WHILE_KW",
-        "DO_KW", "IDENTIFIER", "INTEGER_CONSTANT",
-        "REAL_CONSTANT", "SUM", "SUB", "MUL", "DIV",
-        "DIV_KW", "MOD_KW", "LT", "LE",
-        "EQ", "NE", "GT", "GE", "AND_KW",
-        "OR_KW", "NOT_KW", "LRB", "RRB",
-        "ASSIGN", "FUNCTION_KW", "SEMICOLON", "COLON", "COMMA", "DOT","ERROR",
-    ]
-    reserved = {
-        'program': 'PROGRAM_KW',
+                 "INTEGER_CONSTANT", "REAL_CONSTANT", "IDENTIFIER",
+                 "SUM", "SUB", "MUL", "DIV", "ASSIGN", "LT", "LE",
+                 "EQ", "NE", "GT", "GE", "LRB", "RRB", "SEMICOLON",
+                 "COLON", "COMMA", "DOT", "ERROR"
+             ] + list(reserved.values())
 
-        'if': 'IF_KW',
-        'then': 'THEN_KW',
-        'else': 'ELSE_KW',
+    # OPERATORS
+    t_SUM = r'\+'
+    t_SUB = r'\-'
+    t_MUL = r'\*'
+    t_DIV = r'/'
+    t_ASSIGN = r':='
+    t_LT = r'<'
+    t_LE = r'<='
+    t_EQ = r'='
+    t_NE = r'<>'
+    t_GT = r'>'
+    t_GE = r'>='
 
-        'while': 'WHILE_KW',
-        'do': 'DO_KW',
+    # BRACKETS
+    t_LRB = r'\('
+    t_RRB = r'\)'
 
-        'integer': 'INTEGER_KW',
-        'real': 'REAL_KW',
-
-        'mod': 'MOD_KW',
-        'procedure': 'PROCEDURE_KW',
-        'var': 'VAR_KW',
-        'div': 'DIV_KW',
-        'function': 'FUNCTION_KW',
-
-        'and': 'AND_KW',
-        'or': 'OR_KW',
-        'not': 'NOT_KW',
-        'begin': 'BEGIN_KW',
-        'end': 'END_KW'
-    }
+    # COLONS
     t_SEMICOLON = r';'
     t_COLON = r':'
     t_COMMA = r','
-    t_DOT = r'.'
+    t_DOT = r'\.'
 
-    t_MUL = r'\*'
-    t_DIV = r'/'
-    t_SUM = r'\+'
-    t_SUB = r'\-'
-    t_ASSIGN = r':='
-    t_EQ = r'='
-    t_GT = r'>'
-    t_GE = r'>='
-    t_LT = r'<'
-    t_LE = r'<='
-    t_NE = r'<>'
 
-    t_LRB = r'\('
-    t_RRB = r'\)'
-    def t_ERROR(self, t):
-        r'[0-9]+[a-z_A-Z][a-zA-Z_0-9]*'
+    # A string containing ignored characters (spaces and tabs)
+    t_ignore = ' \t'
+
+    @staticmethod
+    def t_ERROR(t):
+        r"""\d+[_|a-z|A-Z]\w*"""
         return t
-    
-    def t_newline(self, t):
-        r'\n+'
+
+    @staticmethod
+    def t_newline(t):
+        r"""\n+"""
         t.lexer.lineno += len(t.value)
+        pass
 
-    t_ignore = '\n \t'
 
-    def t_REAL_CONSTANT(self, t):
-        r'[0-9]*\.[0-9]+'
+    @staticmethod
+    def t_REAL_CONSTANT(t):
+        r"""\d+\.\d*"""
         t.value = float(t.value)
         return t
 
-    def t_INTEGER_CONSTANT(self, t):
-        r'(\d+)'
+    @staticmethod
+    def t_INTEGER_CONSTANT(t):
+        r"""\d+"""
         t.value = int(t.value)
         return t
 
     def t_IDENTIFIER(self, t):
-        r'[_a-zA-Z][_a-zA-Z0-9]*'
-        if t.value in self.reserved:
-            t.type = self.reserved[t.value]
+        r"""[_|a-z|A-Z]\w*"""
+        t.type = self.reserved.get(t.value, 'IDENTIFIER')
         return t
 
     # Error handling rule
-    def t_error(self, t):
-        raise Exception('Error at', t.value)
+    @staticmethod
+    def t_error(t):
+        raise Exception("Illegal character '%s'" % t.value[0])
 
     def build(self, **kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
         return self.lexer
-
