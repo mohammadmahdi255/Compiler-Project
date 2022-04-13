@@ -1,0 +1,113 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND_KW
+    DIV
+    DIV_KW
+    EQ
+    ERROR
+    FUNCTION_KW
+    GE
+    GT
+    INTEGER_CONSTANT
+    LE
+    LT
+    MOD_KW
+    MUL
+    NE
+    NOT_KW
+    OR_KW
+    REAL_CONSTANT
+    SUB
+    SUM
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM_KW IDENTIFIER declarations procedure_list compound_statement DOT
+Rule 2     declarations -> VAR_KW declaration_list SEMICOLON
+Rule 3     declarations -> empty
+Rule 4     declaration_list -> identifier_list COLON type
+Rule 5     declaration_list -> declaration_list COLON identifier_list COLON type
+Rule 6     identifier_list -> IDENTIFIER
+Rule 7     identifier_list -> identifier_list COMMA IDENTIFIER
+Rule 8     type -> INTEGER_KW
+Rule 9     type -> REAL_KW
+Rule 10    procedure_list -> procedure_list procedure
+Rule 11    procedure -> PROCEDURE_KW IDENTIFIER parameters COLON declarations compound_statement
+Rule 12    paramdec -> LRB declaration_list RRB
+Rule 13    paramdec -> empty
+Rule 14    compound_statement -> BEGIN_KW statement_list END_KW
+Rule 15    statement_list -> statement
+Rule 16    statement_list -> statement_list COLON statement
+Rule 17    statement -> IDENTIFIER ASSIGN expression
+Rule 18    statement -> IF_KW expression THEN_KW statement ELSE_KW statement
+Rule 19    statement -> IF_KW expression THEN_KW statement
+Rule 20    statement -> WHILE_KW expression DO_KW statement
+Rule 21    statement -> compound_statement
+Rule 22    statement -> IDENTIFIER arguments
+Rule 23    statement -> empty
+Rule 24    empty -> <empty>
+
+Terminals, with rules where they appear
+
+AND_KW               : 
+ASSIGN               : 17
+BEGIN_KW             : 14
+COLON                : 4 5 5 11 16
+COMMA                : 7
+DIV                  : 
+DIV_KW               : 
+DOT                  : 1
+DO_KW                : 20
+ELSE_KW              : 18
+END_KW               : 14
+EQ                   : 
+ERROR                : 
+FUNCTION_KW          : 
+GE                   : 
+GT                   : 
+IDENTIFIER           : 1 6 7 11 17 22
+IF_KW                : 18 19
+INTEGER_CONSTANT     : 
+INTEGER_KW           : 8
+LE                   : 
+LRB                  : 12
+LT                   : 
+MOD_KW               : 
+MUL                  : 
+NE                   : 
+NOT_KW               : 
+OR_KW                : 
+PROCEDURE_KW         : 11
+PROGRAM_KW           : 1
+REAL_CONSTANT        : 
+REAL_KW              : 9
+RRB                  : 12
+SEMICOLON            : 2
+SUB                  : 
+SUM                  : 
+THEN_KW              : 18 19
+VAR_KW               : 2
+WHILE_KW             : 20
+error                : 
+
+Nonterminals, with rules where they appear
+
+arguments            : 22
+compound_statement   : 1 11 21
+declaration_list     : 2 5 12
+declarations         : 1 11
+empty                : 3 13 23
+expression           : 17 18 19 20
+identifier_list      : 4 5 7
+paramdec             : 
+parameters           : 11
+procedure            : 10
+procedure_list       : 1 10
+program              : 0
+statement            : 15 16 18 18 19 20
+statement_list       : 14 16
+type                 : 4 5
+

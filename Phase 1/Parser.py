@@ -1,5 +1,5 @@
 from ply import yacc
-from lexer import Lexer
+from Lexer import Lexer
 
 
 class Parser:
@@ -8,7 +8,7 @@ class Parser:
     precedence = (
         ('left', "LRB", "RRB"),
 
-        ('left', "ELSEIF", "ELSE"),
+        ('left', "ELSE"),
         ('left', "IF"),
 
         ('left', "OR"),
@@ -24,7 +24,6 @@ class Parser:
         ('left', "INTEGER_KW"),
         ('left', "REAL_KW"),
 
-
         ('left', "ID"),
         ('right', "ASSIGN"),
 
@@ -32,7 +31,7 @@ class Parser:
     )
 
     def __init__(self):
-        pass
+        self.parser = None
 
     def p_program(self, p):
         """program : PROGRAM_KW IDENTIFIER declarations procedure_list compound_statement DOT"""
@@ -65,12 +64,12 @@ class Parser:
         print("procedure_list : procedure_list procedure")
 
     def p_procedure(self, p):
-        """procedure : PROCEDURE_KW IDENTIFIER parameters COLON declarations compound_statement
-                    |empty"""
+        """procedure : PROCEDURE_KW IDENTIFIER parameters COLON declarations compound_statement"""
         print("procedure : PROCEDURE_KW IDENTIFIER parameters COLON declarations compound_statement")
 
     def p_parameters(self, p):
-        """paramdec : LRB declaration_list RRB"""
+        """paramdec : LRB declaration_list RRB
+                    | empty"""
         print("paramdec : LRB declaration_list RRB")
 
     def p_compound_statement(self, p):
@@ -79,12 +78,17 @@ class Parser:
 
     def p_statement_list(self, p):
         """statement_list : statement
-                     | statement_list COLON statement"""
+                          | statement_list COLON statement"""
         print("statement_list : statement  | statement_list COLON statement")
 
     def p_statement(self, p):
-        """statement_list : statement
-                     | statement_list COLON statement"""
+        """statement : IDENTIFIER ASSIGN expression
+                     | IF_KW expression THEN_KW statement ELSE_KW statement
+                     | IF_KW expression THEN_KW statement
+                     | WHILE_KW expression DO_KW statement
+                     | compound_statement
+                     | IDENTIFIER arguments
+                     | empty"""
         print("statement_list : statement  | statement_list COLON statement")
 
     def p_empty(self, p):

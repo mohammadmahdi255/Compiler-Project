@@ -56,7 +56,3 @@ begin
    end;
 
 end.
-
-00.2
-
-22ewwr2
