@@ -1,7 +1,7 @@
 program Hello
 
 var
-   _i1, i2_, i3, retProc : integer;
+   i1, i2_, i3, retProc : integer;
    index : integer;
    r1, r2, r3, retFunc : real;
 
