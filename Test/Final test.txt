@@ -1,18 +1,20 @@
-program pascalTest;
+program Hello
 
 var
-<<<<<<< HEAD
-   _i1, i2_, i3, retProc, aa : integer;
-=======
-   _i1, i2_, i3, retProc, 2a : integer;
->>>>>>> main
+   i1, i2_, i3, retProc : integer;
    index : integer;
    r1, r2, r3, retFunc : real;
 
-procedure findMax(a, b, c: integer; var res: integer);
+procedure findMax(a, b, c: integer); var res: integer; asf: real;
 begin
   if a > b then
-      res := a
+  begin
+      res := a;
+      if a > 10 then
+        res := 10
+      else
+        res := b
+  end
   else
       res := b;
   if c >= res then
@@ -55,12 +57,16 @@ begin
    while  index <= 2  do
    begin
       findMax(_i1, i2_, i3, retProc);
-      retFunc := calc(r1,r2,r3);
-<<<<<<< HEAD
+      calc(r1,r2,r3,retFunc,asf);
+      if index > 2 then
+      begin
+          res := 20;
+          if _i1 > 10 then
+            res := 10
+          else
+            res := 11
+      end;
       index := index + 1;
-=======
-      index := index +-+- 1;
->>>>>>> main
    end;
 
    if i3 <> 3 then
@@ -68,5 +74,4 @@ begin
 
   if  _i1 and i2_ or not i3 then
       r2 := 9.1;
-
 end.
