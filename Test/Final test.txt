@@ -72,6 +72,6 @@ begin
    if i3 <> 3 then
        r1 := 4.4;
 
-  if  _i1 and i2_ or not i3 then
+  if  _i1 and i2_ or not 4 then
       r2 := 9.1;
 end.
