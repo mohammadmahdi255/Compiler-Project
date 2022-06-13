@@ -17,5 +17,8 @@ while token is not None:
 file.close()
 
 parser = Parser(path, file_name)
-parser.build().parse(text_input, lexer, False)
+parser.build()
+parser.parse(text_input, lexer, False)
 parser.file.close()
+parser.graph.write('{path}\\Test\\{file_name}_graph.dot'.format(path=path, file_name=file_name))
+parser.graph.write_png('{path}\\Test\\{file_name}_graph.png'.format(path=path, file_name=file_name))

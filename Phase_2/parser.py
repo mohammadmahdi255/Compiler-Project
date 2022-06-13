@@ -1,6 +1,7 @@
 from ply import yacc
 from Phase_1.lexer import Lexer
 from Phase_3 import *
+from pydot import *
 
 
 class Parser:
@@ -33,64 +34,64 @@ class Parser:
         ('left', "LRB", "RRB"),
     )
 
-    @staticmethod
-    def p_program(p):
+    def p_program(self, p):
         """program : PROGRAM_KW IDENTIFIER declarations procedure_list compound_statement DOT"""
+        self.initialize_non_terminal(p, 'program')
 
-    @staticmethod
-    def p_declarations(p):
+    def p_declarations(self, p):
         """declarations : VAR_KW declaration_list SEMICOLON
                         | empty"""
+        self.initialize_non_terminal(p, 'declarations')
 
-    @staticmethod
-    def p_declaration_list(p):
+    def p_declaration_list(self, p):
         """declaration_list : identifier_list COLON type
-               | declaration_list SEMICOLON identifier_list COLON type"""
+                            | declaration_list SEMICOLON identifier_list COLON type"""
+        self.initialize_non_terminal(p, 'declaration_list')
 
-    @staticmethod
-    def p_identifier_list(p):
+    def p_identifier_list(self, p):
         """identifier_list : IDENTIFIER
-                | identifier_list COMMA IDENTIFIER"""
+                           | identifier_list COMMA IDENTIFIER"""
+        self.initialize_non_terminal(p, 'identifier_list')
 
-    @staticmethod
-    def p_type(p):
+    def p_type(self, p):
         """type : INTEGER_KW
                 | REAL_KW"""
+        self.initialize_non_terminal(p, 'type')
 
-    @staticmethod
-    def p_procedure_list(p):
+    def p_procedure_list(self, p):
         """procedure_list : procedure_list procedure
                           | procedure_list function
                           | empty"""
+        self.initialize_non_terminal(p, 'procedure_list')
 
-    @staticmethod
-    def p_procedure(p):
+    def p_procedure(self, p):
         """procedure : PROCEDURE_KW IDENTIFIER parameters SEMICOLON declarations compound_statement SEMICOLON"""
+        self.initialize_non_terminal(p, 'procedure')
 
-    @staticmethod
-    def p_function(p):
+    def p_function(self, p):
         """function : FUNCTION_KW IDENTIFIER parameters COLON type SEMICOLON declarations compound_statement SEMICOLON"""
+        self.initialize_non_terminal(p, 'function')
 
-    @staticmethod
-    def p_parameters(p):
+    def p_parameters(self, p):
         """parameters : LRB declaration_list RRB
                     | empty"""
+        self.initialize_non_terminal(p, 'parameters')
 
-    @staticmethod
-    def p_compound_statement(p):
+    def p_compound_statement(self, p):
         """compound_statement : BEGIN_KW statement_list END_KW"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'compound_statement')
+
         p[0].nextList = p[2].nextList
 
-    @staticmethod
-    def p_statement_list(p):
+    def p_statement_list(self, p):
         """statement_list : statement
                           | statement_list SEMICOLON empty statement"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'statement_list')
 
     def p_statement_assign(self, p):
         """statement : IDENTIFIER ASSIGN expression"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'statement')
+
         S = p[0]
         E = p[3]
 
@@ -103,7 +104,7 @@ class Parser:
 
     def p_statement_if_else(self, p):
         """statement : IF_KW expression THEN_KW empty statement empty_N ELSE_KW empty statement"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'statement')
 
         S = p[0]
         B = p[2]
@@ -126,13 +127,12 @@ class Parser:
     def p_statement_if(self, p):
         """statement : IF_KW expression THEN_KW empty statement empty_N"""
 
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'statement')
 
         S = p[0]
         B = p[2]
         M = p[4]
         S1 = p[5]
-        N = p[6]
 
         assert isinstance(S, NonTerminal) and isinstance(B, NonTerminal)
         assert isinstance(S1, NonTerminal) and isinstance(M, NonTerminal)
@@ -142,7 +142,7 @@ class Parser:
 
     def p_statement_while(self, p):
         """statement : WHILE_KW empty expression DO_KW empty statement"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'statement')
 
         S = p[0]
         M1 = p[2]
@@ -158,49 +158,47 @@ class Parser:
         S.nextList = B.falseList
         self.code_output.append("goto {}".format(M1.instr))
 
-    @staticmethod
-    def p_statement_compound(p):
+    def p_statement_compound(self, p):
         """statement : compound_statement"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'statement')
+
         p[0].nextList = p[1].nextList
 
-    @staticmethod
-    def p_statement(p):
+    def p_statement(self, p):
         """statement : IDENTIFIER arguments
                      | empty"""
+        self.initialize_non_terminal(p, 'statement')
 
-    @staticmethod
-    def p_arguments(p):
+    def p_arguments(self, p):
         """arguments : LRB actual_parameter_list RRB"""
+        self.initialize_non_terminal(p, 'arguments')
 
-    @staticmethod
-    def p_actual_parameter_list(p):
+    def p_actual_parameter_list(self, p):
         """actual_parameter_list : actual_parameter_list COMMA actual_parameter
                                  | actual_parameter"""
+        self.initialize_non_terminal(p, 'actual_parameter_list')
 
-    @staticmethod
-    def p_actual_parameter(p):
+    def p_actual_parameter(self, p):
         """actual_parameter : expression"""
+        self.initialize_non_terminal(p, 'actual_parameter')
 
-    @staticmethod
-    def p_expression_assign_constant(p):
+    def p_expression_assign_constant(self, p):
         """expression : INTEGER_CONSTANT
                       | REAL_CONSTANT"""
-        # print(p[0], p[1])
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
+
         p[0].value = p[1]
 
-    @staticmethod
-    def p_expression_assign_identifier(p):
+    def p_expression_assign_identifier(self, p):
         """expression : IDENTIFIER"""
-        # print(p[0], p[1])
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
+
         p[0].place = p[1]
 
     def p_expression_uminus(self, p):
         """expression : SUB expression"""
-        # print(p[0], p[1], p[2])
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
+
         p[0].place = self.new_temp()
         p[0].code = p[2].code + "{} = -{}".format(p[0].place, p[2].get_value())
 
@@ -220,8 +218,7 @@ class Parser:
                       | expression GT expression
                       | expression GE expression
                       """
-        # print(p[0], p[1], p[2], p[3])
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
 
         E = p[0]
         E1 = p[1]
@@ -245,13 +242,11 @@ class Parser:
             self.code_output.append("if {} {} {} goto ".format(E1.get_value(), op, E2.get_value()))
             self.code_output.append("goto ".format(E1.get_value(), op, E2.get_value()))
 
-        print(E.code)
-
     def p_expression_bool(self, p):
         """expression : expression AND_KW empty expression
                       | expression OR_KW empty expression
                       """
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
 
         B = p[0]
         B1 = p[1]
@@ -270,10 +265,9 @@ class Parser:
             B.trueList = B1.trueList + B2.trueList
             B.falseList = B2.falseList
 
-    @staticmethod
-    def p_expression_not(p):
+    def p_expression_not(self, p):
         """expression : NOT_KW expression"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
 
         B = p[0]
         B1 = p[2]
@@ -283,11 +277,9 @@ class Parser:
         B.trueList = B1.falseList
         B.falseList = B1.trueList
 
-    @staticmethod
-    def p_expression(p):
+    def p_expression(self, p):
         """expression : LRB expression RRB"""
-        # print(p[0], p[1], p[2].value)
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'expression')
 
         E = p[0]
         E1 = p[2]
@@ -302,12 +294,14 @@ class Parser:
 
     def p_empty(self, p):
         """empty :"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'empty')
+
         p[0].instr = self.nextInstr
 
     def p_empty_N(self, p):
         """empty_N :"""
-        p[0] = NonTerminal()
+        self.initialize_non_terminal(p, 'empty_N')
+
         p[0].nextList.append(self.nextInstr)
         self.code_output.append("goto ")
 
@@ -328,9 +322,28 @@ class Parser:
         for i in bool_list:
             self.code_output[i - 1] += str(instr)
 
+    def initialize_non_terminal(self, p, label):
+        p[0] = NonTerminal(self.nodeNum, label=label)
+        self.nodeNum += 1
+
+        self.node_list.append(p[0].node)
+
+        for i in range(1, len(p)):
+            item = p[i]
+            if isinstance(item, NonTerminal):
+                self.graph.add_edge(Edge(p[0].node, item.node))
+            else:
+                node = Node("N" + str(self.nodeNum), label='"{}"'.format(item))
+                self.nodeNum += 1
+                self.node_list.append(node)
+                self.graph.add_edge(Edge(p[0].node, node))
+
     def __init__(self, path, file_name):
         self.parser = None
         self.p = None
+        self.nodeNum = 0
+        self.node_list = []
+        self.graph = Dot(graph_type='graph', compound='true')
         self.code_output = []
         self.file = open('{path}\\Test\\{file_name}_code_output.txt'.format(path=path, file_name=file_name), "w")
         self.quadruples = []
@@ -340,4 +353,13 @@ class Parser:
 
     def build(self, **kwargs):
         self.parser = yacc.yacc(module=self, **kwargs)
-        return self.parser
+
+    def parse(self, input=None, lexer=None, debug=False, tracking=False, tokenfunc=None):
+        if self.parser:
+            self.parser.parse(input, lexer, debug, tracking, tokenfunc)
+            for node in self.node_list:
+                self.graph.add_node(node)
+        else:
+            print("build first!")
+
+

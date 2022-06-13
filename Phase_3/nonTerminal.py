@@ -1,6 +1,12 @@
+from pydot import Cluster, Node
+
+
 class NonTerminal:
 
-    def __init__(self):
+    def __init__(self, name, label):
+        # for graph
+        self.node = Node(name="N{}".format(name), label=label)
+
         self.place = None
         self.value = None
         self.code = ""
